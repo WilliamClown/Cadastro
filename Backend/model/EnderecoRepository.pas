@@ -33,7 +33,7 @@ var
 begin
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'SELECT * FROM endereco';
     Query.Open;
     ResultArray := TJSONArray.Create;
@@ -61,7 +61,7 @@ var
 begin
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'SELECT e.idpessoa, e.dscep, e.idendereco, ei.dscomplemento, ei.dsuf, ei.nmbairro, ei.nmcidade, ei.nmlogradouro '+
                       'FROM endereco e '+
                       'inner join endereco_integracao ei '+
@@ -99,7 +99,7 @@ begin
   PessoaData := Data.GetValue<TJSONObject>('pessoa');
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'UPDATE pessoa SET flnatureza = :flnatureza, dsdocumento = :dsdocumento, nmprimeiro = :nmprimeiro, nmsegundo = :nmsegundo, dtregistro = :dtregistro WHERE idpessoa = :id';
 
     Query.ParamByName('flnatureza').AsInteger := PessoaData.GetValue<integer>('flnatureza');
@@ -123,7 +123,7 @@ var
 begin
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'UPDATE endereco SET dscep = :dscep WHERE idpessoa = :idpessoa';
 
     Query.ParamByName('dscep').AsString := EnderecoData.GetValue<string>('dscep', '');
@@ -145,7 +145,7 @@ var
 begin
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'SELECT idendereco FROM endereco WHERE idpessoa = :idpessoa';
     Query.ParamByName('idpessoa').AsInteger := IdPessoa;
     Query.Open;

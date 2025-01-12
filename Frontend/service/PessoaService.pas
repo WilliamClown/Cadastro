@@ -63,6 +63,7 @@ begin
     HttpRequest.AddPair('nmbairro', Endereco.Bairro);
     HttpRequest.AddPair('nmcidade', Endereco.Cidade);
     HttpRequest.AddPair('dsuf', Endereco.UF);
+    HttpRequest.AddPair('dscomplemento', Endereco.Complemento);
 
     StringStream := TStringStream.Create(HttpRequest.ToString, TEncoding.UTF8);
     try
@@ -142,7 +143,8 @@ begin
             JSONResult.GetValue<string>('nmlogradouro', ''),
             JSONResult.GetValue<string>('nmbairro', ''),
             JSONResult.GetValue<string>('nmcidade', ''),
-            JSONResult.GetValue<string>('dsuf', '')
+            JSONResult.GetValue<string>('dsuf', ''),
+            JSONResult.GetValue<string>('dscomplemento ', '')
           )
         else
           raise Exception.Create('Erro: Pessoa não encontrada.');
@@ -183,7 +185,9 @@ begin
       .AddPair('nmlogradouro', Pessoa.Logradouro)
       .AddPair('nmbairro', Pessoa.Bairro)
       .AddPair('nmcidade', Pessoa.Cidade)
-      .AddPair('dsuf', Pessoa.UF));
+      .AddPair('dsuf', Pessoa.UF)
+      .AddPair('dscomplemento', Pessoa.Complemento)
+      );
 
     StringStream := TStringStream.Create(HttpRequest.ToString, TEncoding.UTF8);
     try
@@ -291,7 +295,8 @@ begin
           .AddPair('nmlogradouro', Pessoa.Logradouro)
           .AddPair('nmbairro', Pessoa.Bairro)
           .AddPair('nmcidade', Pessoa.Cidade)
-          .AddPair('dsuf', Pessoa.UF))
+          .AddPair('dsuf', Pessoa.UF)
+          .AddPair('dscomplemento', Pessoa.Complemento))
       );
     end;
 

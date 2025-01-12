@@ -59,7 +59,6 @@ type
     procedure AtualizarCEPLote;
     function DataSetToPessoaList: TList<TPessoaDTO>;
     procedure AtualizarVisualizacao(const Atual, Total: Integer; const StatusMsg: string);
-    procedure LoadIniInfo;
     procedure VerificarOuCriarIniFrontend;
   public
     { Public declarations }
@@ -112,7 +111,7 @@ begin
         begin
           Endereco := FPessoaController.GetEnderecoById(Pessoa.Id);
           if not Endereco.CEP.IsEmpty then
-            FPessoaController.UpdatePessoa(TPessoaDTO.Create(Pessoa.Id, Pessoa.Nome, Pessoa.Sobrenome, Pessoa.Documento, Endereco.CEP, Endereco.Logradouro, Endereco.Bairro, Endereco.Cidade, Endereco.UF));
+            FPessoaController.UpdatePessoa(TPessoaDTO.Create(Pessoa.Id, Pessoa.Nome, Pessoa.Sobrenome, Pessoa.Documento, Endereco.CEP, Endereco.Logradouro, Endereco.Bairro, Endereco.Cidade, Endereco.UF, Endereco.Complemento));
         end;
 
         AtualizarVisualizacao(Atual, Total, Format('Atualizando %d de %d registros...', [Atual, Total]));
@@ -162,7 +161,7 @@ begin
         dsDados.DataSet.FieldByName('Sobrenome').AsString,
         dsDados.DataSet.FieldByName('Documento').AsString,
         dsDados.DataSet.FieldByName('Cep').AsString,
-        '', '', '', ''
+        '', '', '', '', ''
       );
       PessoaList.Add(Pessoa);
       dsDados.DataSet.Next;
@@ -179,11 +178,6 @@ begin
   dsDados := TDataSource.Create(Self);
   DBGDados.DataSource := dsDados;
   PopularGrid;
-end;
-
-procedure TFormMenu.LoadIniInfo;
-begin
-
 end;
 
 procedure TFormMenu.pnlBotaoAtualizarCEPClick(Sender: TObject);

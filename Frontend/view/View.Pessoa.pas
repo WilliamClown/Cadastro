@@ -290,7 +290,8 @@ begin
       Format(Endereco.Logradouro + '%d', [I]),
       Format(Endereco.Bairro + '%d', [I]),
       Format(Endereco.Cidade + '%d', [I]),
-      Format(Endereco.UF + '%d', [I])
+      Format(Endereco.UF + '%d', [I]),
+      Format(Endereco.Complemento + '%d', [I])
     );
 
     ListaPessoas.Add(Pessoa);
@@ -328,7 +329,8 @@ begin
     edtLogradouro.Text,
     edtBairro.Text,
     edtCidade.Text,
-    edtUf.Text
+    edtUf.Text,
+    edtComplemento.Text
   );
 
   // Monta o DTO de Endereço

@@ -8,7 +8,8 @@ uses
   EnderecoDTO in 'dto\EnderecoDTO.pas',
   PessoaService in 'service\PessoaService.pas',
   EnderecoService in 'service\EnderecoService.pas',
-  PessoaController in 'controller\PessoaController.pas';
+  PessoaController in 'controller\PessoaController.pas',
+  ConfigSingleton in 'util\ConfigSingleton.pas';
 
 {$R *.res}
 

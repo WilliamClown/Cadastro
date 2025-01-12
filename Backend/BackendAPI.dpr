@@ -10,7 +10,7 @@ uses
   EnderecoController in 'controller\EnderecoController.pas',
   PessoaRepositoryFactory in 'model\PessoaRepositoryFactory.pas',
   EnderecoRepositoryFactory in 'model\EnderecoRepositoryFactory.pas',
-  Data in 'dao\Data.pas' {DataModule1: TDataModule},
+  Data in 'dao\Data.pas' {DMData: TDataModule},
   uIPessoaRepository in 'model\uIPessoaRepository.pas',
   uIEnderecoRepository in 'model\uIEnderecoRepository.pas',
   uFrmServidor in 'view\uFrmServidor.pas' {FrmServidor},
@@ -41,14 +41,14 @@ begin
     if not Application.DelayInitialize or Application.Installing then
       Application.Initialize;
 
-    Application.CreateForm(TDataModule1, DataModule1);
+    Application.CreateForm(TDMData, DMData);
   Application.CreateForm(TMainService, MainService);
   Application.Run;
   end
   else
   begin
     ReportMemoryLeaksOnShutdown := True;
-    Application.CreateForm(TDataModule1, DataModule1);
+    Application.CreateForm(TDMData, DMData);
     Application.CreateForm(TFrmServidor, FrmServidor);
     FrmServidor.ShowModal;
   end;

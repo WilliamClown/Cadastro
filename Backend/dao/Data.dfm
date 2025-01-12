@@ -1,4 +1,4 @@
-object DataModule1: TDataModule1
+object DMData: TDMData
   Height = 480
   Width = 640
   object FDConnection: TFDConnection

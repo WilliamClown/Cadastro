@@ -115,6 +115,7 @@
         <DCCReference Include="service\PessoaService.pas"/>
         <DCCReference Include="service\EnderecoService.pas"/>
         <DCCReference Include="controller\PessoaController.pas"/>
+        <DCCReference Include="util\ConfigSingleton.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -141,7 +142,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
-                <DeployFile LocalName="Win32\Debug\Frontend.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Bin\Win32\Debug\Frontend.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Frontend.exe</RemoteName>
                         <Overwrite>true</Overwrite>
