@@ -276,9 +276,16 @@ var
   ListaPessoas: TList<TPessoaDTO>;
   Pessoa: TPessoaDTO;
   Endereco: TEnderecoDTO;
+  Quantidade: string;
+  QuantidadeValida: Integer;
 begin
+  repeat
+    Quantidade := InputBox('Cadastro em Lote','Digite a quantidade de registro a ser gerado', '50');
+  until TryStrToInt(Quantidade, QuantidadeValida);
+
+
   ListaPessoas := TList<TPessoaDTO>.Create;
-  for I := 1 to 50 do
+  for I := 1 to QuantidadeValida do
   begin
     Endereco := ObterCEPValido('05602010');
     Pessoa := TPessoaDTO.Create(

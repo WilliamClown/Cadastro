@@ -248,6 +248,7 @@ procedure TFormMenu.PopularGrid;
 begin
   try
     dsDados.DataSet := FPessoaController.GetPessoasDataSet;
+    dsDados.DataSet.First;
   except
     on E: Exception do
       ShowMessage('Erro ao carregar dados: ' + E.Message);

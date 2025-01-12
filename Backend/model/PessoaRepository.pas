@@ -35,11 +35,12 @@ var
 begin
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'SELECT p.idpessoa, p.flnatureza, p.dsdocumento, p.nmprimeiro, p.nmsegundo, p.dtregistro, e.dscep '+
                       'FROM pessoa p '+
                       'inner join endereco e '+
-                      'on e.idpessoa = p.idpessoa';
+                      'on e.idpessoa = p.idpessoa '+
+                      'order by p.idpessoa';
     Query.Open;
     ResultArray := TJSONArray.Create;
 
@@ -71,7 +72,7 @@ var
 begin
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'SELECT * FROM pessoa WHERE idpessoa = :id';
     Query.ParamByName('id').AsInteger := Id;
     Query.Open;
@@ -96,21 +97,100 @@ end;
 
 function TPessoaRepository.CreateLotePessoas( const BodyArray: TJSONArray): Boolean;
 var
+  FDQueryPessoa, FDQueryEndereco, FDQueryIntegracao: TFDQuery;
   i: Integer;
-  PessoaData: TJSONObject;
-  Success: Boolean;
+  PessoaData, EnderecoData: TJSONObject;
+  ArraySize: Integer;
+  IdPessoas, IdEnderecos: TArray<Variant>;
 begin
-  Success := True;
-  for i := 0 to BodyArray.Count - 1 do
-  begin
-    PessoaData := BodyArray.Items[i] as TJSONObject;
-    if not CreateWithEndereco(PessoaData) then
+  Result := False;
+  if BodyArray.Count = 0 then
+    Exit;
+
+  ArraySize := BodyArray.Count;
+  SetLength(IdPessoas, ArraySize);
+  SetLength(IdEnderecos, ArraySize);
+
+  FDQueryPessoa := TFDQuery.Create(nil);
+  FDQueryEndereco := TFDQuery.Create(nil);
+  FDQueryIntegracao := TFDQuery.Create(nil);
+  try
+    FDQueryPessoa.Connection := DMData.FDConnection;
+    FDQueryPessoa.SQL.Text := 'INSERT INTO pessoa (flnatureza, dsdocumento, nmprimeiro, nmsegundo, dtregistro) VALUES (:flnatureza, :dsdocumento, :nmprimeiro, :nmsegundo, :dtregistro) RETURNING idpessoa';
+
+    FDQueryPessoa.Params.ArraySize := ArraySize;
+
+    for i := 0 to ArraySize - 1 do
     begin
-      Success := False;
-      Break;
+      PessoaData := BodyArray.Items[i].GetValue<TJSONObject>('pessoa');
+      EnderecoData := BodyArray.Items[i].GetValue<TJSONObject>('endereco');
+
+      if not Assigned(PessoaData) or not Assigned(EnderecoData) then
+        raise Exception.CreateFmt('Dados de pessoa ou endereço ausentes no registro %d', [i + 1]);
+
+      FDQueryPessoa.Params[0].AsIntegers[i] := PessoaData.GetValue<integer>('flnatureza');
+      FDQueryPessoa.Params[1].AsStrings[i] := PessoaData.GetValue<string>('dsdocumento');
+      FDQueryPessoa.Params[2].AsStrings[i] := PessoaData.GetValue<string>('nmprimeiro');
+      FDQueryPessoa.Params[3].AsStrings[i] := PessoaData.GetValue<string>('nmsegundo');
+      FDQueryPessoa.Params[4].AsDateTimes[i] := Now;
+    end;
+
+    // Executa o ArrayDML sem passar o terceiro parâmetro, pois não é suportado em todas as versões do FireDAC
+    FDQueryPessoa.Execute(ArraySize);
+
+    // Coletar IDs manualmente
+    for i := 0 to ArraySize - 1 do
+    begin
+      FDQueryPessoa.NextRecordSet;
+      IdPessoas[i] := FDQueryPessoa.FieldByName('idpessoa').Value;
+    end;
+
+    FDQueryEndereco.Connection := DMData.FDConnection;
+    FDQueryEndereco.SQL.Text := 'INSERT INTO endereco (idpessoa, dscep) VALUES (:idpessoa, :dscep) RETURNING idendereco';
+    FDQueryEndereco.Params.ArraySize := ArraySize;
+
+    for i := 0 to ArraySize - 1 do
+    begin
+      FDQueryEndereco.Params[0].AsIntegers[i] := IdPessoas[i];
+      FDQueryEndereco.Params[1].AsStrings[i] := EnderecoData.GetValue<string>('dscep');
+    end;
+
+    FDQueryEndereco.Execute(ArraySize);
+
+    for i := 0 to ArraySize - 1 do
+    begin
+      FDQueryEndereco.NextRecordSet;
+      IdEnderecos[i] := FDQueryEndereco.FieldByName('idendereco').Value;
+    end;
+
+    FDQueryIntegracao.Connection := DMData.FDConnection;
+    FDQueryIntegracao.SQL.Text := 'INSERT INTO endereco_integracao (idendereco, dsuf, nmcidade, nmbairro, nmlogradouro, dscomplemento) VALUES (:idendereco, :dsuf, :nmcidade, :nmbairro, :nmlogradouro, :dscomplemento)';
+    FDQueryIntegracao.Params.ArraySize := ArraySize;
+
+    for i := 0 to ArraySize - 1 do
+    begin
+      FDQueryIntegracao.Params[0].AsIntegers[i] := IdEnderecos[i];
+      FDQueryIntegracao.Params[1].AsStrings[i] := EnderecoData.GetValue<string>('dsuf');
+      FDQueryIntegracao.Params[2].AsStrings[i] := EnderecoData.GetValue<string>('nmcidade');
+      FDQueryIntegracao.Params[3].AsStrings[i] := EnderecoData.GetValue<string>('nmbairro');
+      FDQueryIntegracao.Params[4].AsStrings[i] := EnderecoData.GetValue<string>('nmlogradouro');
+      FDQueryIntegracao.Params[5].AsStrings[i] := EnderecoData.GetValue<string>('dscomplemento');
+    end;
+
+    FDQueryIntegracao.Execute(ArraySize);
+
+    DMData.FDConnection.Commit;
+    Result := True;
+  except
+    on E: Exception do
+    begin
+      DMData.FDConnection.Rollback;
+      raise Exception.Create('Erro ao inserir lote de registros: ' + E.Message);
     end;
   end;
-  Result := Success;
+  FDQueryPessoa.Free;
+  FDQueryEndereco.Free;
+  FDQueryIntegracao.Free;
 end;
 
 function TPessoaRepository.CreateWithEndereco(Data: TJSONObject): Boolean;
@@ -127,7 +207,7 @@ begin
 
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.Connection.StartTransaction;
     try
       Query.SQL.Text := 'INSERT INTO pessoa (flnatureza, dsdocumento, nmprimeiro, nmsegundo, dtregistro) VALUES (:flnatureza, :dsdocumento, :nmprimeiro, :nmsegundo, :dtregistro) RETURNING idpessoa';
@@ -151,7 +231,7 @@ begin
        Query.ParamByName('nmcidade').AsString := EnderecoData.GetValue<string>('nmcidade');
        Query.ParamByName('nmbairro').AsString := EnderecoData.GetValue<string>('nmbairro');
        Query.ParamByName('nmlogradouro').AsString := EnderecoData.GetValue<string>('nmlogradouro');
-       Query.ParamByName('dscomplemento').AsString := EnderecoData.GetValue<string>('dscep');
+       Query.ParamByName('dscomplemento').AsString := EnderecoData.GetValue<string>('dscomplemento');
        Query.ExecSQL;
 
       Query.Connection.Commit;
@@ -173,7 +253,7 @@ begin
   PessoaData := Data.GetValue<TJSONObject>('pessoa');
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'UPDATE pessoa SET flnatureza = :flnatureza, dsdocumento = :dsdocumento, nmprimeiro = :nmprimeiro, nmsegundo = :nmsegundo WHERE idpessoa = :id';
     Query.ParamByName('flnatureza').AsInteger := PessoaData.GetValue<integer>('flnatureza');
     Query.ParamByName('dsdocumento').AsString := PessoaData.GetValue<string>('dsdocumento');
@@ -194,7 +274,7 @@ var
 begin
   Query := TFDQuery.Create(nil);
   try
-    Query.Connection := DataModule1.FDConnection;
+    Query.Connection := DMData.FDConnection;
     Query.SQL.Text := 'DELETE FROM pessoa WHERE idpessoa = :id';
     Query.ParamByName('id').AsInteger := Id;
     Query.ExecSQL;
