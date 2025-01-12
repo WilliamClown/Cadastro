@@ -2,9 +2,8 @@ program BackendAPI;
 
 uses
   Vcl.SvcMgr,
-  Main in 'Main.pas' {Service1: TService},
+  Main in 'Main.pas' {MainService: TService},
   PessoaController in 'controller\PessoaController.pas',
-  PessoaModel in 'model\PessoaModel.pas',
   PessoaRepository in 'model\PessoaRepository.pas',
   PessoaService in 'service\PessoaService.pas',
   EnderecoRepository in 'model\EnderecoRepository.pas',
@@ -14,7 +13,11 @@ uses
   Data in 'dao\Data.pas' {DataModule1: TDataModule},
   uIPessoaRepository in 'model\uIPessoaRepository.pas',
   uIEnderecoRepository in 'model\uIEnderecoRepository.pas',
-  uFrmServidor in 'view\uFrmServidor.pas' {FrmServidor};
+  uFrmServidor in 'view\uFrmServidor.pas' {FrmServidor},
+  IniUtils in 'util\IniUtils.pas',
+  uServiceUtil in 'util\uServiceUtil.pas',
+  uUtils in 'util\uUtils.pas',
+  WinSvcEx in 'util\WinSvcEx.pas';
 
 {$R *.RES}
 
@@ -33,9 +36,21 @@ begin
   //
   // Application.DelayInitialize := True;
   //
-  if not Application.DelayInitialize or Application.Installing then
-    Application.Initialize;
-  //Application.CreateForm(TService1, Service1);
-  Application.CreateForm(TFrmServidor, FrmServidor);
+  if uServiceUtil.IsServiceProcess then
+  begin
+    if not Application.DelayInitialize or Application.Installing then
+      Application.Initialize;
+
+    Application.CreateForm(TDataModule1, DataModule1);
+  Application.CreateForm(TMainService, MainService);
   Application.Run;
+  end
+  else
+  begin
+    ReportMemoryLeaksOnShutdown := True;
+    Application.CreateForm(TDataModule1, DataModule1);
+    Application.CreateForm(TFrmServidor, FrmServidor);
+    FrmServidor.ShowModal;
+  end;
+
 end.

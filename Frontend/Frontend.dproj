@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{9E12D799-587F-4154-86C2-CF9F6F59244E}</ProjectGuid>
+        <ProjectGuid>{D176B251-9E91-4FD3-AC82-CBF2D30499CE}</ProjectGuid>
         <ProjectVersion>19.5</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
@@ -8,19 +8,9 @@
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
-        <MainSource>BackendAPI.dpr</MainSource>
+        <MainSource>Frontend.dpr</MainSource>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Base)'=='true') or '$(Base_Android)'!=''">
-        <Base_Android>true</Base_Android>
-        <CfgParent>Base</CfgParent>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Android64' and '$(Base)'=='true') or '$(Base_Android64)'!=''">
-        <Base_Android64>true</Base_Android64>
-        <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
@@ -65,17 +55,9 @@
         <DCC_K>false</DCC_K>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-        <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
-        <SanitizedProjectName>BackendAPI</SanitizedProjectName>
-        <DCC_UnitSearchPath>..\modules\.dcp;..\modules\.dcu;..\modules;..\modules\horse\src;..\modules\jhonson\src;..\modules\horse-cors\src;..\modules\delphi-jose-jwt\Source\Common;..\modules\delphi-jose-jwt\Source\JOSE;..\modules\delphi-jose-jwt\Source;..\modules\hashlib4pascal\HashLib\src\Base;..\modules\hashlib4pascal\HashLib\src\Checksum;..\modules\hashlib4pascal\HashLib\src\Crypto\Blake2BParams;..\modules\hashlib4pascal\HashLib\src\Crypto\Blake2SParams;..\modules\hashlib4pascal\HashLib\src\Crypto;..\modules\hashlib4pascal\HashLib\src\Hash128;..\modules\hashlib4pascal\HashLib\src\Hash32;..\modules\hashlib4pascal\HashLib\src\Hash64;..\modules\hashlib4pascal\HashLib\src\Include;..\modules\hashlib4pascal\HashLib\src\Interfaces;..\modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2BParams;..\modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2SParams;..\modules\hashlib4pascal\HashLib\src\KDF;..\modules\hashlib4pascal\HashLib\src\NullDigest;..\modules\hashlib4pascal\HashLib\src\Nullable;..\modules\hashlib4pascal\HashLib\src\Packages\FPC;..\modules\hashlib4pascal\HashLib\src\Utils;..\modules\hashlib4pascal\HashLib.Benchmark\src\Core;..\modules\hashlib4pascal\HashLib.Benchmark\src\Forms\FMX;..\modules\hashlib4pascal\HashLib.Tests\src;..\modules\horse-jwt\src;$(DCC_UnitSearchPath);..\modules\horse-compression\src;modules\.dcp;modules\.dcu;modules;modules\delphi-jose-jwt\Source\Common;modules\delphi-jose-jwt\Source\JOSE;modules\delphi-jose-jwt\Source;modules\hashlib4pascal\HashLib\src\Base;modules\hashlib4pascal\HashLib\src\Checksum;modules\hashlib4pascal\HashLib\src\Crypto\Blake2BParams;modules\hashlib4pascal\HashLib\src\Crypto\Blake2SParams;modules\hashlib4pascal\HashLib\src\Crypto;modules\hashlib4pascal\HashLib\src\Hash128;modules\hashlib4pascal\HashLib\src\Hash32;modules\hashlib4pascal\HashLib\src\Hash64;modules\hashlib4pascal\HashLib\src\Include;modules\hashlib4pascal\HashLib\src\Interfaces;modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2BParams;modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2SParams;modules\hashlib4pascal\HashLib\src\KDF;modules\hashlib4pascal\HashLib\src\NullDigest;modules\hashlib4pascal\HashLib\src\Nullable;modules\hashlib4pascal\HashLib\src\Packages\FPC;modules\hashlib4pascal\HashLib\src\Utils;modules\hashlib4pascal\HashLib.Benchmark\src\Core;modules\hashlib4pascal\HashLib.Benchmark\src\Forms\FMX;modules\hashlib4pascal\HashLib.Tests\src;modules\horse\src;modules\horse-compression\src;modules\horse-cors\src;modules\horse-jwt\src;modules\jhonson\src</DCC_UnitSearchPath>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Android)'!=''">
-        <DCC_UsePackage>fmx;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;IndyProtocols;dbxcds;FmxTeeUI;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;CustomIPTransport;IndySystem;ibxbindings;FireDACCommon;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;RESTDWCore;ibxpress;dsnap;DataSnapNativeClient;RESTDWSocketIndy;FireDACCommonDriver;IndyIPClient;bindcompfmx;ibmonitor;fmxFireDAC;DataSnapCommon;fmxase;dbrtl;DBXInterBaseDriver;RESTDWShellServices;bindcomp;IndyCore;RESTBackendComponents;RESTDWDriverFireDAC;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;FMXTee;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Android64)'!=''">
-        <DCC_UsePackage>fmx;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;IndyProtocols;dbxcds;FmxTeeUI;FireDACSqliteDriver;DbxClientDriver;soapmidas;ACBr_PagFor;dbexpress;inet;FireDACDBXDriver;CustomIPTransport;ACBr_NFSeX;IndySystem;ACBr_NFSeXDanfseRL;ibxbindings;FireDACCommon;bindcompdbx;rtl;frce;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;RESTDWCore;ibxpress;dsnap;DataSnapNativeClient;RESTDWSocketIndy;FireDACCommonDriver;IndyIPClient;bindcompfmx;ibmonitor;fmxFireDAC;DataSnapCommon;dbrtl;DBXInterBaseDriver;RESTDWShellServices;bindcomp;IndyCore;RESTBackendComponents;RESTDWDriverFireDAC;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;ACBr_Boleto;emsclientfiredac;FireDACDSDriver;tethering;ACBr_GTIN;CloudService;ACBr_OFX;FMXTee;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+        <SanitizedProjectName>Frontend</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>JvNet;SampleListViewMultiDetailAppearancePackage;dxPSdxSpreadSheetLnkRS28;vclwinx;DataSnapServer;ACBr_BPeDabpeESCPOS;ACBr_TCP;frxIBX28;ACBr_ONE;dacvcl280;RESTDWWizards;fmx;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;DBXMSSQLDriver;FireDACCommonODBC;emsclient;ACBr_OpenSSL;fsIBX28;appanalytics;IndyProtocols;vclx;dxHttpIndyRequestRS28;frxe28;dbxcds;vcledge;cxExportRS28;dxPSPrVwRibbonRS28;cxPivotGridOLAPRS28;dxTileControlRS28;dxPSdxDBOCLnkRS28;FmxTeeUI;frxFD28;ACBr_BoletoRL;unidac280;dxGDIPlusRS28;DBXFirebirdDriver;ACBr_CTeDacteFR;dxCoreRS28;cxPivotGridRS28;fsDB28;ACBr_NFCeECFVirtual;frxADO28;JvAppFrm;FireDACSqliteDriver;DbxClientDriver;dxSpreadSheetRS28;dxSkinsCoreRS28;dxPSCoreRS28;TInjectCollection;JclVcl;soapmidas;dxBarRS28;ACBr_NF3eDANF3eESCPOS;TeeUI;ACBr_PagFor;dxADOServerModeRS28;Jcl;dbexpress;JvManagedThreads;dxWizardControlRS28;frxDBX28;ACBr_Reinf;unidacvcl280;inet;dacfmx280;dxServerModeRS28;vcltouch;cxTreeListRS28;dxBarDBNavRS28;JvDB;FireDACDBXDriver;fmxdae;dxPScxCommonRS28;JvCustom;EhLibIBXDataDrivers280;CustomIPTransport;FireDACMSSQLDriver;ACBr_NFSeX;JvSystem;dxNavBarRS28;ACBr_NFe;JvControls;dxSpreadSheetReportDesignerRS28;dxFireDACEMFRS28;ACBr_CTeDacteRL;JvCrypt;dxComnRS28;JvJans;JvMM;IndySystem;ACBr_Diversos;ACBr_GNREGuiaRL;dxFlowChartDesignerRS28;cxVerticalGridRS28;ACBr_NFSeXDanfseRL;ACBr_SAT;JvGlobus;ibxbindings;frxIntIOIndy28;dxPSDBTeeChartRS28;dxmdsRS28;ACBr_CIOT;dxRichEditControlRS28;ACBr_TEFD;JclContainers;cxSchedulerGridRS28;dxPsPrVwAdvRS28;dxPScxSchedulerLnkRS28;JvPageComps;dxPSdxOCLnkRS28;vclFireDAC;ACBr_SPED;ACBr_CTe;ACBr_SATWS;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;ACBr_SEF2;ACBr_LCDPR;unidacfmx280;dxRibbonCustomizationFormRS28;dxADOEMFRS28;dxPSdxDBTVLnkRS28;bindcompdbx;dxGaugeControlRS28;frxHTML28;rtl;FireDACMySQLDriver;ACBr_NFeDanfeFR;dxDockingRS28;dxPDFViewerRS28;frce;ACBr_BPe;DBXSqliteDriver;dxBarExtItemsRS28;RESTDWDriverUNIDAC;ACBr_Sintegra;dxPSdxFCLnkRS28;dxorgcRS28;DBXSybaseASEDriver;dxSpreadSheetCoreConditionalFormattingDialogsRS28;JvRuntimeDesign;ACBr_Serial;ACBr_Comum;ACBr_MDFe;JvXPCtrls;ACBr_NFeDanfeESCPOS;dxPSRichEditControlLnkRS28;vclimg;DataSnapFireDAC;inetdbxpress;FireDAC;JvDocking;JvDlgs;xmlrtl;RESTDWCore;ibxpress;frxPDF28;dsnap;JvCmp;fsADO28;FireDACDb2Driver;cxSchedulerRibbonStyleEventEditorRS28;DBXOracleDriver;dxPScxTLLnkRS28;DBXInformixDriver;EhLibDBXDataDrivers280;vclib;ACBr_SATECFVirtual;fmxobj;bindcompvclsmp;DataSnapNativeClient;ACBr_SATExtratoFR;CEF4Delphi;ACBr_synapse;dxFlowChartRS28;dxPScxPCProdRS28;DatasnapConnectorsFreePascal;ACBr_NF3e;ACBr_PAF;ACBr_OpenDelivery;ACBr_MDFeDamdfeFR;ACBr_SPEDImportar;emshosting;dxRichEditDocumentModelRS28;dxPSdxMapControlLnkRS28;RESTDWSocketIndy;cxGridEMFRS28;dxGanttControlRS28;dxPScxVGridLnkRS28;dxPScxPivotGridLnkRS28;FireDACCommonDriver;ACBr_ADRCST;EhLib280;ACBr_MTER;IndyIPClient;frxTee28;dac280;cxLibraryRS28;dxCloudServiceLibraryRS28;bindcompvclwinx;ACBr_Convenio115;ACBr_NFSeDanfseFR;emsedge;bindcompfmx;JvBands;dxPSdxPDFViewerLnkRS28;inetdb;dxSpreadSheetCoreRS28;cxSchedulerTreeBrowserRS28;ibmonitor;FireDACASADriver;ACBr_LFD;dxTabbedMDIRS28;Tee;vclactnband;frxIntIO28;fmxFireDAC;dxFireDACServerModeRS28;FireDACInfxDriver;DBXMySQLDriver;VclSmp;ACBr_Ponto;DataSnapCommon;JvPascalInterpreter;dxPSdxLCLnkRS28;fmxase;dxdbtrRS28;frx28;JvPluginSystem;DBXOdbcDriver;fsFD28;dbrtl;JvTimeFramework;FireDACOracleDriver;ACBr_NFSeDanfseRL;dxPSLnksRS28;ACBr_NFSe;TeeDB;ACBre_Social;FireDACMSAccDriver;DataSnapIndy10ServerTransport;JclDeveloperTools;DataSnapConnectors;ACBr_ANe;ACBr_SATExtratoRL;vcldsnap;DBXInterBaseDriver;frxDB28;FireDACMongoDBDriver;JvWizards;ACBR_DeSTDA;ACBr_GNRE;dxSpreadSheetConditionalFormattingDialogsRS28;ACBr_EDI;FireDACTDataDriver;dxOrgChartAdvancedCustomizeFormRS28;vcldb;ACBr_Integrador;dxDBXServerModeRS28;cxSchedulerRS28;ACBr_PIXCD;dxRibbonRS28;TBGWebCharts;dxFlowChartLayoutsRS28;dxPScxExtCommonRS28;RESTDWShellServices;dxdborRS28;fs28;ACBr_BoletoFR;JvCore;bindcomp;vquery280;dxRichEditControlCoreRS28;dxPScxGridLnkRS28;IndyCore;RESTBackendComponents;fsTee28;cxPivotGridChartRS28;dxBarExtDBItemsRS28;ACBr_PCNComum;dxRichEditCoreRS28;cxTreeListdxBarPopupMenuRS28;dxFlowChartAdvancedCustomizeFormRS28;FireDACADSDriver;RESTDWDriverFireDAC;RESTComponents;ACBr_NFSeXDANFSeFR;IndyIPServer;vcl;dsnapxml;adortl;dsnapcon;DataSnapClient;DataSnapProviderClient;ACBr_MDFeDamdfeRL;JvDotNetCtrls;Pix;JvHMI;cxSchedulerWebServiceStorageRS28;dxtrmdRS28;dxPSTeeChartRS28;DBXDb2Driver;dxPSdxGaugeControlLnkRS28;frxcs28;cxGridRS28;dxSpellCheckerRS28;ACBr_Boleto;emsclientfiredac;FireDACPgDriver;FireDACDSDriver;SWH;ACBr_BlocoX;ACBr_SATExtratoESCPOS;tethering;EhLibADODataDrivers280;JvStdCtrls;JvPrintPreview;crcontrols280;bindcompvcl;ACBr_GTIN;dxMapControlRS28;dxEMFRS28;CloudService;DBXSybaseASADriver;ACBr_OFX;ACBr_PAFNFCe;FMXTee;ACBr_NFeDanfeRL;ACBr_GNREGuiaFR;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -102,8 +84,6 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
-        <DCC_ExeOutput>.\Bin\$(Platform)\$(Config)</DCC_ExeOutput>
-        <DCC_DcuOutput>.\DCU\$(Platform)\$(Config)</DCC_DcuOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
@@ -120,33 +100,19 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Main.pas">
-            <Form>MainService</Form>
+        <DCCReference Include="view\View.Menu.pas">
+            <Form>FormMenu</Form>
             <FormType>dfm</FormType>
-            <DesignClass>TService</DesignClass>
         </DCCReference>
-        <DCCReference Include="controller\PessoaController.pas"/>
-        <DCCReference Include="model\PessoaRepository.pas"/>
+        <DCCReference Include="view\View.Pessoa.pas">
+            <Form>FormPessoa</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="dto\PessoaDTO.pas"/>
+        <DCCReference Include="dto\EnderecoDTO.pas"/>
         <DCCReference Include="service\PessoaService.pas"/>
-        <DCCReference Include="model\EnderecoRepository.pas"/>
-        <DCCReference Include="controller\EnderecoController.pas"/>
-        <DCCReference Include="model\PessoaRepositoryFactory.pas"/>
-        <DCCReference Include="model\EnderecoRepositoryFactory.pas"/>
-        <DCCReference Include="dao\Data.pas">
-            <Form>DataModule1</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="model\uIPessoaRepository.pas"/>
-        <DCCReference Include="model\uIEnderecoRepository.pas"/>
-        <DCCReference Include="view\uFrmServidor.pas">
-            <Form>FrmServidor</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="util\IniUtils.pas"/>
-        <DCCReference Include="util\uServiceUtil.pas"/>
-        <DCCReference Include="util\uUtils.pas"/>
-        <DCCReference Include="util\WinSvcEx.pas"/>
+        <DCCReference Include="service\EnderecoService.pas"/>
+        <DCCReference Include="controller\PessoaController.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -165,7 +131,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">BackendAPI.dpr</Source>
+                    <Source Name="MainSource">Frontend.dpr</Source>
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
@@ -173,9 +139,9 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
-                <DeployFile LocalName="Bin\Win32\Debug\BackendAPI.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\Frontend.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>BackendAPI.exe</RemoteName>
+                        <RemoteName>Frontend.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1003,12 +969,9 @@
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
             </Deployment>
             <Platforms>
-                <Platform value="Android">False</Platform>
-                <Platform value="Android64">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
-            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

@@ -13,6 +13,7 @@ type
     function CreateWithEndereco(Data: TJSONObject): Boolean;
     function Update(Id: Integer; Data: TJSONObject): Boolean;
     function Delete(Id: Integer): Boolean;
+    function CreateLotePessoas(const BodyArray: TJSONArray): Boolean;
   end;
 
 implementation

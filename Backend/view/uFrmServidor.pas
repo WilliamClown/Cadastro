@@ -14,7 +14,8 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   Vcl.Imaging.pngimage,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls,
+  PessoaService, uServiceUtil, IniUtils;
 
 type
   TFrmServidor = class(TForm)
@@ -70,12 +71,13 @@ type
 var
   FrmServidor: TFrmServidor;
 
-const ServiceDescription = 'Servidor de Tarefa API';
+const ServiceDescription = 'Cadastro de Pessoa API';
+      NomeApi = 'PessoaAPI';
 
 implementation
 
 uses
-  Horse, Horse.Commons, System.Json, Winapi.ShellAPI;
+  Horse, Horse.Commons, System.Json, Winapi.ShellAPI, uUtils;
 
 {$R *.dfm}
 
@@ -88,50 +90,111 @@ end;
 
 procedure TFrmServidor.HabilitarBotoes;
 begin
-  //
+  pnBotaoIniciarServico.Enabled := uServiceUtil.IsServiceStopped(uUtils.GetNomeComputador, NomeApi);
+  pnBotaoPararServico.Enabled := (not pnBotaoIniciarServico.Enabled) and (uServiceUtil.IsServiceInstalled(uUtils.GetNomeComputador, NomeApi));
+  pnBotaoInstalarServico.Enabled := not uServiceUtil.IsServiceInstalled(uUtils.GetNomeComputador, NomeApi);
+  pnBotaoDesinstalarServico.Enabled := not pnBotaoInstalarServico.Enabled;
 end;
 
 procedure TFrmServidor.LoadIniInfo;
+var
+  Ini: TIniUtils;
 begin
-  //
+  Ini := TIniUtils.New;
+  edtServidor.Text := Ini.Server;
+  edtPortaBase.Text := IntToStr(Ini.Port);
+  edtBase.Text := Ini.Database;
+  edtUsuario.Text := Ini.User;
+  edtSenha.Text := Ini.Pass;
+  edtPortaAPI.Text := IntToStr(Ini.PortAPI);
 end;
 
 procedure TFrmServidor.pnBotaoDesinstalarServicoClick(Sender: TObject);
 begin
-//
+  try
+    uServiceUtil.DelService(NomeApi);
+    ShowMessage('Serviço desinstalado com sucesso!');
+    HabilitarBotoes;
+  except
+    on E: Exception do
+    begin
+      HabilitarBotoes;
+      ShowMessage(E.Message);
+    end;
+  end;
 end;
 
 procedure TFrmServidor.pnBotaoGravarINIClick(Sender: TObject);
-
+var
+  Ini: TIniUtils;
 begin
-//
+  Ini := TIniUtils.New;
+  Ini.Server := edtServidor.Text;
+  Ini.Port := StrToInt(edtPortaBase.Text);
+  Ini.Database := edtBase.Text;
+  Ini.User := edtUsuario.Text;
+  Ini.Pass := edtSenha.Text;
+  Ini.PortAPI := StrToInt(edtPortaAPI.Text);
+  Ini.SaveIniFile;
 end;
 
 procedure TFrmServidor.pnBotaoIniciarAPIClick(Sender: TObject);
 begin
   Start;
   Status;
+  pnBotaoPararAPI.Color := RGB(255, 70, 70);
+  pnBotaoIniciarAPI.Color := clSilver;
 end;
 
 procedure TFrmServidor.pnBotaoIniciarServicoClick(Sender: TObject);
 begin
-//
+  try
+    uServiceUtil.ServiceStart(uUtils.GetNomeComputador, NomeApi);
+    ShowMessage('Serviço iniciado com sucesso!');
+    HabilitarBotoes;
+  except
+    on E: Exception do
+    begin
+      HabilitarBotoes;
+    end;
+  end;
 end;
 
 procedure TFrmServidor.pnBotaoInstalarServicoClick(Sender: TObject);
 begin
-//
+  try
+    uServiceUtil.InstallService(NomeApi, ServiceDescription, Application.ExeName, ServiceDescription);
+    ShowMessage('Serviço instalado com sucesso!');
+    HabilitarBotoes;
+  except
+    on E: Exception do
+    begin
+      HabilitarBotoes;
+    end;
+  end;
 end;
 
 procedure TFrmServidor.pnBotaoPararAPIClick(Sender: TObject);
 begin
   Stop;
   Status;
+  pnBotaoPararAPI.Color := clSilver;
+  pnBotaoIniciarAPI.Color := clMoneyGreen;
 end;
 
 procedure TFrmServidor.pnBotaoPararServicoClick(Sender: TObject);
 begin
-//
+  try
+    uServiceUtil.ServiceStop(uUtils.GetNomeComputador, NomeApi);
+    ShowMessage('Serviço parado com sucesso!');
+    HabilitarBotoes;
+  except
+    on E: Exception do
+    begin
+      HabilitarBotoes;
+      ShowMessage(E.Message);
+    end;
+  end;
 end;
 
 procedure TFrmServidor.RegistrarLog(pMsg: string);
@@ -141,17 +204,20 @@ end;
 
 procedure TFrmServidor.Start;
 begin
- //
+  RegisterRoutes;
+  THorse.Listen(StrToInt(edtPortaAPI.text));
 end;
 
 procedure TFrmServidor.Status;
 begin
-  //
+  pnBotaoPararAPI.Enabled := THorse.IsRunning;
+  pnBotaoIniciarAPI.Enabled := not THorse.IsRunning;
+  edtPortaAPI.Enabled := not THorse.IsRunning;
 end;
 
 procedure TFrmServidor.Stop;
 begin
- //
+  THorse.StopListen;
 end;
 
 end.

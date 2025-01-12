@@ -5,10 +5,9 @@ object DataModule1: TDataModule1
     Params.Strings = (
       'User_Name=postgres'
       'Password=12345'
-      'Server=192.168.2.2'
+      'Server=192.168.2.7'
       'Database=postgres'
       'DriverID=PG')
-    Connected = True
     Left = 328
     Top = 264
   end

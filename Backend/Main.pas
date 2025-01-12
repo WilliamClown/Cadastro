@@ -12,28 +12,25 @@ uses
   Vcl.SvcMgr,
   Vcl.Dialogs,
   Horse,
-  Horse.CORS,
-  Horse.JWT,
   PessoaService,
-  Data;
+  IniUtils;
 
 type
-  TService1 = class(TService)
+  TMainService = class(TService)
+    procedure ServiceStart(Sender: TService; var Started: Boolean);
+    procedure ServiceStop(Sender: TService; var Stopped: Boolean);
+    procedure ServiceCreate(Sender: TObject);
   private
     { Private declarations }
+    function GetPort: Integer;
   public
     { Public declarations }
     function GetServiceController: TServiceController; override;
-    procedure StartServer;
   end;
 
 
-
 var
-  Service1: TService1;
-
-const
-  SECRET_KEY = 'Ii7NSJL4AxKvP0BBu3tbv8OcQt99d6';
+  MainService: TMainService;
 
 implementation
 
@@ -41,21 +38,34 @@ implementation
 
 procedure ServiceController(CtrlCode: DWord); stdcall;
 begin
-  Service1.Controller(CtrlCode);
+  MainService.Controller(CtrlCode);
 end;
 
-function TService1.GetServiceController: TServiceController;
+function TMainService.GetPort: Integer;
+begin
+  Result := TIniUtils.New.PortAPI;
+end;
+
+function TMainService.GetServiceController: TServiceController;
 begin
   Result := ServiceController;
 end;
 
-procedure TService1.StartServer;
+procedure TMainService.ServiceCreate(Sender: TObject);
 begin
-  THorse.Use(HorseJWT(SECRET_KEY));  // Middleware para autenticação JWT
-  THorse.Use(CORS);
   RegisterRoutes;
-  DataModule1 := TDataModule1.Create(nil);
-  THorse.Listen(8080);
+end;
+
+procedure TMainService.ServiceStart(Sender: TService; var Started: Boolean);
+begin
+  THorse.Listen(GetPort);
+  Started := True;
+end;
+
+procedure TMainService.ServiceStop(Sender: TService; var Stopped: Boolean);
+begin
+  THorse.StopListen;
+  Stopped := True;
 end;
 
 end.

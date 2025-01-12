@@ -5,7 +5,10 @@ interface
 uses
   System.JSON,
   FireDAC.Comp.Client,
+  FireDAC.Stan.Param,
   System.SysUtils,
+  System.Generics.Collections,
+  Data.DB,
   uIPessoaRepository;
 
 type
@@ -16,6 +19,7 @@ type
     function CreateWithEndereco(Data: TJSONObject): Boolean; virtual;
     function Update(Id: Integer; Data: TJSONObject): Boolean; virtual;
     function Delete(Id: Integer): Boolean; virtual;
+    function CreateLotePessoas(const BodyArray: TJSONArray): Boolean; virtual;
   end;
 
 implementation
@@ -32,7 +36,10 @@ begin
   Query := TFDQuery.Create(nil);
   try
     Query.Connection := DataModule1.FDConnection;
-    Query.SQL.Text := 'SELECT * FROM pessoa';
+    Query.SQL.Text := 'SELECT p.idpessoa, p.flnatureza, p.dsdocumento, p.nmprimeiro, p.nmsegundo, p.dtregistro, e.dscep '+
+                      'FROM pessoa p '+
+                      'inner join endereco e '+
+                      'on e.idpessoa = p.idpessoa';
     Query.Open;
     ResultArray := TJSONArray.Create;
 
@@ -45,6 +52,8 @@ begin
       Item.AddPair('nmprimeiro', Query.FieldByName('nmprimeiro').AsString);
       Item.AddPair('nmsegundo', Query.FieldByName('nmsegundo').AsString);
       Item.AddPair('dtregistro', Query.FieldByName('dtregistro').AsString);
+      Item.AddPair('dscep', Query.FieldByName('dscep').AsString);
+
       ResultArray.AddElement(Item);
       Query.Next;
     end;
@@ -85,11 +94,30 @@ begin
   end;
 end;
 
+function TPessoaRepository.CreateLotePessoas( const BodyArray: TJSONArray): Boolean;
+var
+  i: Integer;
+  PessoaData: TJSONObject;
+  Success: Boolean;
+begin
+  Success := True;
+  for i := 0 to BodyArray.Count - 1 do
+  begin
+    PessoaData := BodyArray.Items[i] as TJSONObject;
+    if not CreateWithEndereco(PessoaData) then
+    begin
+      Success := False;
+      Break;
+    end;
+  end;
+  Result := Success;
+end;
+
 function TPessoaRepository.CreateWithEndereco(Data: TJSONObject): Boolean;
 var
   Query: TFDQuery;
   PessoaData, EnderecoData: TJSONObject;
-  IdPessoa: Integer;
+  IdPessoa, IdEndereco: Integer;
 begin
   Result := False;
   PessoaData := Data.GetValue<TJSONObject>('pessoa');
@@ -107,14 +135,24 @@ begin
       Query.ParamByName('dsdocumento').AsString := PessoaData.GetValue<string>('dsdocumento');
       Query.ParamByName('nmprimeiro').AsString := PessoaData.GetValue<string>('nmprimeiro');
       Query.ParamByName('nmsegundo').AsString := PessoaData.GetValue<string>('nmsegundo');
-      Query.ParamByName('dtregistro').AsDate := PessoaData.GetValue<TDate>('dtregistro');
+      Query.ParamByName('dtregistro').AsDate := Now;
       Query.Open;
       IdPessoa := Query.FieldByName('idpessoa').AsInteger;
 
-      Query.SQL.Text := 'INSERT INTO endereco (idpessoa, dscep) VALUES (:idpessoa, :dscep)';
+      Query.SQL.Text := 'INSERT INTO endereco (idpessoa, dscep) VALUES (:idpessoa, :dscep) RETURNING idendereco';
       Query.ParamByName('idpessoa').AsInteger := IdPessoa;
       Query.ParamByName('dscep').AsString := EnderecoData.GetValue<string>('dscep');
-      Query.ExecSQL;
+      Query.Open;
+      IdEndereco := Query.FieldByName('idendereco').AsInteger;
+
+      Query.SQL.Text := 'INSERT INTO endereco_integracao  (idendereco, dsuf, nmcidade, nmbairro, nmlogradouro, dscomplemento) VALUES (:idendereco, :dsuf, :nmcidade, :nmbairro, :nmlogradouro, :dscomplemento)';
+       Query.ParamByName('idendereco').AsInteger := IdEndereco;
+       Query.ParamByName('dsuf').AsString := EnderecoData.GetValue<string>('dsuf');
+       Query.ParamByName('nmcidade').AsString := EnderecoData.GetValue<string>('nmcidade');
+       Query.ParamByName('nmbairro').AsString := EnderecoData.GetValue<string>('nmbairro');
+       Query.ParamByName('nmlogradouro').AsString := EnderecoData.GetValue<string>('nmlogradouro');
+       Query.ParamByName('dscomplemento').AsString := EnderecoData.GetValue<string>('dscep');
+       Query.ExecSQL;
 
       Query.Connection.Commit;
       Result := True;
@@ -130,16 +168,17 @@ end;
 function TPessoaRepository.Update(Id: Integer; Data: TJSONObject): Boolean;
 var
   Query: TFDQuery;
+  PessoaData: TJSONObject;
 begin
+  PessoaData := Data.GetValue<TJSONObject>('pessoa');
   Query := TFDQuery.Create(nil);
   try
     Query.Connection := DataModule1.FDConnection;
-    Query.SQL.Text := 'UPDATE pessoa SET flnatureza = :flnatureza, dsdocumento = :dsdocumento, nmprimeiro = :nmprimeiro, nmsegundo = :nmsegundo, dtregistro = :dtregistro WHERE idpessoa = :id';
-    Query.ParamByName('flnatureza').AsInteger := Data.GetValue<integer>('flnatureza');
-    Query.ParamByName('dsdocumento').AsString := Data.GetValue<string>('dsdocumento');
-    Query.ParamByName('nmprimeiro').AsString := Data.GetValue<string>('nmprimeiro');
-    Query.ParamByName('nmsegundo').AsString := Data.GetValue<string>('nmsegundo');
-    Query.ParamByName('dtregistro').AsDate := Data.GetValue<TDate>('dtregistro');
+    Query.SQL.Text := 'UPDATE pessoa SET flnatureza = :flnatureza, dsdocumento = :dsdocumento, nmprimeiro = :nmprimeiro, nmsegundo = :nmsegundo WHERE idpessoa = :id';
+    Query.ParamByName('flnatureza').AsInteger := PessoaData.GetValue<integer>('flnatureza');
+    Query.ParamByName('dsdocumento').AsString := PessoaData.GetValue<string>('dsdocumento');
+    Query.ParamByName('nmprimeiro').AsString := PessoaData.GetValue<string>('nmprimeiro');
+    Query.ParamByName('nmsegundo').AsString := PessoaData.GetValue<string>('nmsegundo');
     Query.ParamByName('id').AsInteger := Id;
     Query.ExecSQL;
     Result := True;
