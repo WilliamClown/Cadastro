@@ -23,6 +23,8 @@ uses
   PessoaController,
   System.Generics.Collections,
   System.Threading,
+  System.IniFiles,
+  System.IOUtils,
   PessoaDTO,
   EnderecoDTO;
 
@@ -53,11 +55,12 @@ type
     { Private declarations }
     FAbort: Boolean;
     FPessoaController: TPessoaController;
-    procedure ConfigurarGrid;
     procedure PopularGrid;
     procedure AtualizarCEPLote;
     function DataSetToPessoaList: TList<TPessoaDTO>;
     procedure AtualizarVisualizacao(const Atual, Total: Integer; const StatusMsg: string);
+    procedure LoadIniInfo;
+    procedure VerificarOuCriarIniFrontend;
   public
     { Public declarations }
   end;
@@ -143,22 +146,8 @@ begin
   end);
 end;
 
-procedure TFormMenu.ConfigurarGrid;
-begin
-//  cdsDados.FieldDefs.Clear;
-//  cdsDados.FieldDefs.Add('ID', ftInteger);
-//  cdsDados.FieldDefs.Add('Natureza', ftInteger);
-//  cdsDados.FieldDefs.Add('dsdocumento', ftString, 20);
-//  cdsDados.FieldDefs.Add('nmprimeiro', ftString, 100);
-//  cdsDados.FieldDefs.Add('nmsegundo', ftString, 100);
-//  cdsDados.FieldDefs.Add('dtregistro', ftDateTime);
-//  cdsDados.FieldDefs.Add('Cep', ftString, 15);
-//  cdsDados.CreateDataSet;
-end;
-
 function TFormMenu.DataSetToPessoaList: TList<TPessoaDTO>;
 var
-  DataSet: TDataSet;
   PessoaList: TList<TPessoaDTO>;
   Pessoa: TPessoaDTO;
 begin
@@ -185,13 +174,16 @@ end;
 
 procedure TFormMenu.FormCreate(Sender: TObject);
 begin
+  VerificarOuCriarIniFrontend;
   FPessoaController := TPessoaController.Create;
-
   dsDados := TDataSource.Create(Self);
   DBGDados.DataSource := dsDados;
-
-  ConfigurarGrid;
   PopularGrid;
+end;
+
+procedure TFormMenu.LoadIniInfo;
+begin
+
 end;
 
 procedure TFormMenu.pnlBotaoAtualizarCEPClick(Sender: TObject);
@@ -265,6 +257,23 @@ begin
   except
     on E: Exception do
       ShowMessage('Erro ao carregar dados: ' + E.Message);
+  end;
+end;
+
+procedure TFormMenu.VerificarOuCriarIniFrontend;
+var
+  IniFile: TIniFile;
+  FilePath: string;
+begin
+  FilePath := TPath.Combine(ExtractFilePath(ParamStr(0)), 'Frontend.ini');
+  if not FileExists(FilePath) then
+  begin
+    IniFile := TIniFile.Create(FilePath);
+    try
+      IniFile.WriteString('Servidor', 'URL', 'http://localhost:9005');
+    finally
+      IniFile.Free;
+    end;
   end;
 end;
 

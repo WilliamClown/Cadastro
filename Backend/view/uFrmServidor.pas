@@ -8,6 +8,8 @@ uses
   System.SysUtils,
   System.Variants,
   System.Classes,
+  System.IniFiles,
+  System.IOUtils,
   Vcl.Graphics,
   Vcl.Controls,
   Vcl.Forms,
@@ -15,7 +17,9 @@ uses
   Vcl.StdCtrls,
   Vcl.Imaging.pngimage,
   Vcl.ExtCtrls,
-  PessoaService, uServiceUtil, IniUtils;
+  PessoaService,
+  uServiceUtil,
+  IniUtils;
 
 type
   TFrmServidor = class(TForm)
@@ -63,6 +67,7 @@ type
     procedure Status;
     procedure Start;
     procedure Stop;
+    procedure VerificarOuCriarIniBackend;
   public
     { Public declarations }
     procedure RegistrarLog(pMsg: string);
@@ -83,6 +88,7 @@ uses
 
 procedure TFrmServidor.FormCreate(Sender: TObject);
 begin
+  VerificarOuCriarIniBackend;
   HabilitarBotoes;
   LoadIniInfo;
   Status;
@@ -218,6 +224,28 @@ end;
 procedure TFrmServidor.Stop;
 begin
   THorse.StopListen;
+end;
+
+procedure TFrmServidor.VerificarOuCriarIniBackend;
+var
+  IniFile: TIniFile;
+  FilePath: string;
+begin
+  FilePath := TPath.Combine(ExtractFilePath(ParamStr(0)), 'backend.ini');
+  if not FileExists(FilePath) then
+  begin
+    IniFile := TIniFile.Create(FilePath);
+    try
+      IniFile.WriteInteger('API', 'PORT', 9005);
+      IniFile.WriteString('DATABASE', 'SERVER', 'localhost');
+      IniFile.WriteInteger('DATABASE', 'PORT', 5432);
+      IniFile.WriteString('DATABASE', 'DATABASE', 'postgres');
+      IniFile.WriteString('DATABASE', 'USER', 'postgres');
+      IniFile.WriteString('DATABASE', 'PASS', '12345');
+    finally
+      IniFile.Free;
+    end;
+  end;
 end;
 
 end.

@@ -38,15 +38,9 @@ type
     Panel6: TPanel;
     Panel4: TPanel;
     Panel5: TPanel;
-    Panel8: TPanel;
-    Image1: TImage;
-    lblBotaoLote: TLabel;
-    Panel9: TPanel;
-    Image2: TImage;
-    lblFechar: TLabel;
-    Panel10: TPanel;
-    Image3: TImage;
-    lblSalvar: TLabel;
+    pnlGerarLoteCadastro: TPanel;
+    pnlFechar: TPanel;
+    pnlSalvar: TPanel;
     Panel3: TPanel;
     Label1: TLabel;
     Label2: TLabel;
@@ -74,10 +68,10 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure edtCepExit(Sender: TObject);
-    procedure lblBotaoLoteClick(Sender: TObject);
-    procedure lblSalvarClick(Sender: TObject);
-    procedure lblFecharClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure pnlGerarLoteCadastroClick(Sender: TObject);
+    procedure pnlSalvarClick(Sender: TObject);
+    procedure pnlFecharClick(Sender: TObject);
   private
     { Private declarations }
     FPessoaService: IPessoaService;
@@ -258,12 +252,25 @@ begin
   end;
 end;
 
-procedure TFormPessoa.lblFecharClick(Sender: TObject);
+procedure TFormPessoa.LimparCamposEndereco;
+begin
+  edtLogradouro.Clear;
+  edtBairro.Clear;
+  edtCidade.Clear;
+  edtUf.Clear;
+end;
+
+function TFormPessoa.ObterCEPValido(CEP: string): TEnderecoDTO;
+begin
+  Result := FEnderecoService.BuscarEnderecoViaCep(CEP);
+end;
+
+procedure TFormPessoa.pnlFecharClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TFormPessoa.lblBotaoLoteClick(Sender: TObject);
+procedure TFormPessoa.pnlGerarLoteCadastroClick(Sender: TObject);
 var
   I: Integer;
   ListaPessoas: TList<TPessoaDTO>;
@@ -292,7 +299,7 @@ begin
   InserirLotePessoas(ListaPessoas);
 end;
 
-procedure TFormPessoa.lblSalvarClick(Sender: TObject);
+procedure TFormPessoa.pnlSalvarClick(Sender: TObject);
 var
   Pessoa: TPessoaDTO;
   Endereco: TEnderecoDTO;
@@ -377,19 +384,6 @@ begin
         end);
     end;
   end);
-end;
-
-procedure TFormPessoa.LimparCamposEndereco;
-begin
-  edtLogradouro.Clear;
-  edtBairro.Clear;
-  edtCidade.Clear;
-  edtUf.Clear;
-end;
-
-function TFormPessoa.ObterCEPValido(CEP: string): TEnderecoDTO;
-begin
-  Result := FEnderecoService.BuscarEnderecoViaCep(CEP);
 end;
 
 end.

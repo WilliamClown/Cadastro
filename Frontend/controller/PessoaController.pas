@@ -9,7 +9,8 @@ uses
   Data.DB,
   Datasnap.DBClient,
   PessoaDTO,
-  EnderecoDTO;
+  EnderecoDTO,
+  ConfigSingleton;
 
 type
   TPessoaController = class
@@ -27,8 +28,11 @@ type
 implementation
 
 constructor TPessoaController.Create;
+var
+  APIURL: string;
 begin
-  FPessoaService := TPessoaServiceFactory.CreateService('http://localhost:9005');
+  APIURL := TIniConfig.GetInstance.GetValue('Servidor', 'URL', 'http://localhost:9005');
+  FPessoaService := TPessoaServiceFactory.CreateService(APIURL);
 end;
 
 function TPessoaController.GetEnderecoById(ID: Integer): TEnderecoDTO;

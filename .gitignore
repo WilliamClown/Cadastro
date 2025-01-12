@@ -68,3 +68,4 @@ modules/
 
 # End of https://www.toptal.com/developers/gitignore/api/delphi
 /Backend/Bin/Win32/Debug/BackendAPI.ini
+/Frontend/Bin/Win32/Debug/frontend.ini
